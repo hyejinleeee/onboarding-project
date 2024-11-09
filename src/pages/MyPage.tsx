@@ -3,13 +3,13 @@ import useAuthStore from "../store/auth.store";
 import { IoPersonOutline } from "react-icons/io5";
 import Button from "../components/common/Button";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchUserData } from "../apis/Auth";
 import { useModal } from "../providers/modal.context";
 import { useToast } from "../providers/toast.context";
 import { useState } from "react";
 import Input from "../components/common/Input";
 import { AiTwotonePicture } from "react-icons/ai";
 import axios from "axios";
+import { fetchUserData } from "../apis/auth";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const MyPage = () => {
     formData.append("nickname", nickname);
 
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `https://moneyfulpublicpolicy.co.kr/profile`,
         formData,
         {
