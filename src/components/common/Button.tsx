@@ -12,11 +12,10 @@ const buttonVariant = cva(
         lg: "px-5 py-2 text-[17px]",
       },
       variant: {
-        outline: "bg-white   text-gray-600",
+        outline: "bg-white text-gray-600",
         contained: "bg-blue-300 text-white",
       },
     },
-
     defaultVariants: { variant: "contained", size: "md" },
   }
 );
@@ -26,24 +25,22 @@ type ButtonVariantProps = VariantProps<typeof buttonVariant>;
 type ButtonProps = {
   children: ReactNode;
 } & ButtonVariantProps &
-  (
-    | ({ to?: undefined } & ComponentProps<"button">)
-    | ({ to: string } & ComponentProps<typeof Link>)
-  );
+  (ComponentProps<"button"> | (ComponentProps<typeof Link> & { to: string }));
 
 const Button = ({ variant, size, children, ...props }: ButtonProps) => {
-  if (props.to) {
+  if ("to" in props) {
     return (
       <Link className={buttonVariant({ variant, size })} {...props}>
         {children}
       </Link>
     );
-  } else if (typeof props.to === "undefined")
+  } else {
     return (
       <button className={buttonVariant({ variant, size })} {...props}>
         {children}
       </button>
     );
+  }
 };
 
 export default Button;
