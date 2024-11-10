@@ -1,15 +1,16 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { fetchPhotos } from "../apis/photos";
+import { fetchPhotos } from "../apis/photos.api";
 import { Photo, PhotoData } from "../types/photo.type";
 import PhotoCard from "../components/home/PhotoCard";
 import Button from "../components/common/Button";
-
+import Spinner from "../components/common/Spinner";
+import { QUERY_KEYS } from "../constants/queryKeys";
 const HomePage = () => {
   const [page, setPage] = useState<number>(0);
 
-  const { isLoading, isError, error, data, isFetching } = useQuery<PhotoData>({
-    queryKey: ["photos", page],
+  const { isPending, isError, error, data, isFetching } = useQuery<PhotoData>({
+    queryKey: [QUERY_KEYS.PHOTOS(page)],
     queryFn: () => fetchPhotos(page),
     placeholderData: keepPreviousData,
   });
@@ -22,7 +23,12 @@ const HomePage = () => {
     setPage((prev) => Math.max(prev - 1, 0));
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
   if (isError)
     return (
       <div>

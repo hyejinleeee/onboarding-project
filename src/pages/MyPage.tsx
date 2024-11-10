@@ -2,14 +2,15 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/auth.store";
 import { IoPersonOutline } from "react-icons/io5";
 import Button from "../components/common/Button";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModal } from "../providers/modal.context";
 import { useToast } from "../providers/toast.context";
 import { useState } from "react";
 import Input from "../components/common/Input";
 import { AiTwotonePicture } from "react-icons/ai";
-import axios from "axios";
-import { fetchUserData } from "../apis/auth";
+import { fetchUserData, updateProfile } from "../apis/auth.api";
+import Spinner from "../components/common/Spinner";
+import { QUERY_KEYS } from "../constants/queryKeys";
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -22,12 +23,13 @@ const MyPage = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [nickname, setNickname] = useState<string>("");
   const queryClient = useQueryClient();
+
   const {
     data: user,
     isPending,
     error,
   } = useQuery({
-    queryKey: ["me"],
+    queryKey: [QUERY_KEYS.USER],
     queryFn: () => fetchUserData(accessToken!),
     enabled: !!accessToken,
   });
@@ -51,34 +53,37 @@ const MyPage = () => {
     if (event.target.files?.[0]) {
       const file = event.target.files[0];
       setImgFile(file);
-      setPreviewUrl(URL.createObjectURL(file)); // 선택한 파일의 미리보기 URL 생성
+      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = async () => {
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      if (!accessToken) return;
+
+      const response = await updateProfile(formData, accessToken);
+      return response;
+    },
+    onSuccess: () => {
+      setEditMode(false);
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+      toast.on({ label: "프로필이 업데이트되었습니다." });
+    },
+    onError: () => {
+      toast.on({ label: "프로필 업데이트에 실패했습니다." });
+    },
+  });
+
+  const handleSubmit = () => {
+    if (imgFile && imgFile.size > 2 * 1024 * 1024) {
+      toast.on({ label: "업로드할 파일의 크기는 2MB 이하여야 합니다." });
+      return;
+    }
     const formData = new FormData();
     if (imgFile) formData.append("avatar", imgFile);
     formData.append("nickname", nickname);
 
-    try {
-      await axios.patch(
-        `https://moneyfulpublicpolicy.co.kr/profile`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-      toast.on({ label: "프로필이 업데이트되었습니다." });
-      setEditMode(false);
-      setPreviewUrl(null); // 업데이트 후 미리보기 URL 초기화
-    } catch (error) {
-      toast.on({ label: "프로필 업데이트에 실패했습니다." });
-    }
+    mutation.mutate(formData);
   };
 
   const handleLogout = () => {
@@ -96,7 +101,12 @@ const MyPage = () => {
     });
   };
 
-  if (isPending) return <div>Loading...</div>;
+  if (isPending)
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
   if (error) return <div>에러</div>;
 
   return (
