@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import QueryProvider from "./providers/QueryProvider.tsx";
 import { ToastProvider } from "./providers/toast.context.tsx";
 import { ModalProvider } from "./providers/modal.context.tsx";
+import "./sentry.ts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

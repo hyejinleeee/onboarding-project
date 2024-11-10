@@ -29,7 +29,15 @@ const HomePage = () => {
         Error: {error instanceof Error ? error.message : "Unknown error"}
       </div>
     );
-
+  return (
+    <button
+      onClick={() => {
+        throw new Error("This is your first error!");
+      }}
+    >
+      Break the world
+    </button>
+  );
   return (
     <div className="flex flex-col justify-center items-center ">
       <ul className="grid grid-cols-3 gap-4">
