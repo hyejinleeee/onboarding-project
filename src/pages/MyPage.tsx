@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/auth.store";
-import { IoPersonOutline } from "react-icons/io5";
+import { IoCamera, IoPersonOutline } from "react-icons/io5";
 import Button from "../components/common/Button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useModal } from "../providers/modal.context";
 import { useToast } from "../providers/toast.context";
 import { useState } from "react";
 import Input from "../components/common/Input";
-import { AiTwotonePicture } from "react-icons/ai";
 import { fetchUserData, updateProfile } from "../apis/auth.api";
 import Spinner from "../components/common/Spinner";
 import { QUERY_KEYS } from "../constants/queryKeys";
@@ -121,7 +120,7 @@ const MyPage = () => {
                   alt="Avatar"
                   className="w-20 h-20 rounded-full"
                 />
-                <AiTwotonePicture
+                <IoCamera
                   onClick={() => document.getElementById("file-input")?.click()}
                   className="cursor-pointer"
                 />
@@ -135,7 +134,7 @@ const MyPage = () => {
             ) : (
               <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
                 <IoPersonOutline className="w-1/2 h-1/2" />
-                <AiTwotonePicture
+                <IoCamera
                   onClick={() => document.getElementById("file-input")?.click()}
                   className="cursor-pointer"
                 />

@@ -31,3 +31,19 @@ export const updateProfile = async (
 
   return response.data;
 };
+
+export const logIn = async (formData: { id: string; password: string }) => {
+  const response = await instance.post(`/login?expiresIn=20m`, formData);
+
+  return response.data;
+};
+
+export const signUp = async (formData: {
+  id: string;
+  password: string;
+  nickname: string;
+}) => {
+  const response = await instance.post(`/register`, formData);
+
+  return response.data;
+};

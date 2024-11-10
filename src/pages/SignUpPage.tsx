@@ -1,9 +1,9 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../providers/toast.context";
 import Button from "../components/common/Button";
 import Input from "../components/common/Input";
+import { signUp } from "../apis/auth.api";
 
 const SignUpPage = () => {
   const [id, setId] = useState("");
@@ -16,11 +16,8 @@ const SignUpPage = () => {
     e.preventDefault();
     const formData = { id, password, nickname };
     try {
-      const response = await axios.post(
-        "https://moneyfulpublicpolicy.co.kr/register",
-        formData
-      );
-      toast.on({ label: response.data.message });
+      const response = await signUp(formData);
+      toast.on({ label: response.message });
       navigate("/log-in");
     } catch (error) {
       toast.on({ label: "회원가입 실패" });

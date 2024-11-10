@@ -1,10 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/auth.store";
 import { useToast } from "../providers/toast.context";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
+import { logIn } from "../apis/auth.api";
 
 const LogInPage = () => {
   const [formData, setFormData] = useState({ id: "", password: "" });
@@ -20,12 +20,9 @@ const LogInPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "https://moneyfulpublicpolicy.co.kr/login?expiresIn=20m",
-        formData
-      );
-      if (response.data.success) {
-        const { accessToken } = response.data;
+      const response = await logIn(formData);
+      if (response.success) {
+        const { accessToken } = response;
         setAccessToken(accessToken);
         navigate("/");
         toast.on({ label: "로그인 되었습니다." });
