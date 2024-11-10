@@ -106,11 +106,11 @@ const MyPage = () => {
         <Spinner />
       </div>
     );
-  if (error) return <div>에러</div>;
+  if (error) return <div>{error.message}</div>;
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col gap-5 p-14 border border-black rounded-lg">
+      <div className="flex flex-col gap-5 p-14 shadow-2xl rounded-lg">
         {editMode ? (
           <>
             <div className="flex flex-col justify-center items-center gap-3 ">
