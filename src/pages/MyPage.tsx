@@ -110,52 +110,58 @@ const MyPage = () => {
 
   return (
     <div className="flex justify-center">
-      {editMode ? (
-        <div className="flex gap-5 p-14 border border-black rounded-lg">
-          <div className="flex justify-center items-start">
-            {previewUrl ? (
-              <div>
-                <img
-                  src={previewUrl}
-                  alt="Avatar"
-                  className="w-20 h-20 rounded-full"
-                />
-                <IoCamera
-                  onClick={() => document.getElementById("file-input")?.click()}
-                  className="cursor-pointer"
-                />
-                <input
-                  type="file"
-                  id="file-input"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-              </div>
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
-                <IoPersonOutline className="w-1/2 h-1/2" />
-                <IoCamera
-                  onClick={() => document.getElementById("file-input")?.click()}
-                  className="cursor-pointer"
-                />
-                <input
-                  type="file"
-                  id="file-input"
-                  style={{ display: "none" }}
-                  onChange={handleFileChange}
-                />
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <p className="text-xl">id: {user?.id}</p>
-            <Input
-              type="text"
-              value={nickname}
-              setValue={setNickname}
-              required
-            />
-            <div className="flex gap-2 mt-5">
+      <div className="flex flex-col gap-5 p-14 border border-black rounded-lg">
+        {editMode ? (
+          <>
+            <div className="flex flex-col justify-center items-center gap-3 ">
+              {previewUrl ? (
+                <div className=" relative">
+                  <img
+                    src={previewUrl}
+                    alt="Avatar"
+                    className="w-32 h-32 rounded-full"
+                  />
+                  <IoCamera
+                    onClick={() =>
+                      document.getElementById("file-input")?.click()
+                    }
+                    className="absolute w-6 h-6 bottom-0 right-0 z-10 cursor-pointer"
+                  />
+                  <input
+                    type="file"
+                    id="file-input"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                </div>
+              ) : (
+                <div className=" relative">
+                  <div className=" w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center">
+                    <IoPersonOutline className="w-1/2 h-1/2" />
+                  </div>
+                  <IoCamera
+                    onClick={() =>
+                      document.getElementById("file-input")?.click()
+                    }
+                    className="absolute w-6 h-6 bottom-0 right-0 z-10 cursor-pointer"
+                  />
+                  <input
+                    type="file"
+                    id="file-input"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+                </div>
+              )}
+              <Input
+                type="text"
+                value={nickname}
+                setValue={setNickname}
+                required
+              />
+            </div>
+
+            <div className="flex gap-2 mt-5 items-center justify-center">
               <Button onClick={() => setEditMode(false)} size="sm">
                 취소
               </Button>
@@ -163,27 +169,25 @@ const MyPage = () => {
                 완료
               </Button>
             </div>
-          </div>
-        </div>
-      ) : (
-        <div className="flex gap-5 p-14 border border-black rounded-lg">
-          <div className="flex justify-center items-start">
-            {user?.avatar ? (
-              <img
-                src={user.avatar}
-                alt="Avatar"
-                className="w-20 h-20 rounded-full"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
-                <IoPersonOutline className="w-1/2 h-1/2" />
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col">
-            <p className="text-xl">id: {user?.id}</p>
-            <p className="text-xl">nickname: {user?.nickname}</p>
-            <div className="flex gap-2 mt-5">
+          </>
+        ) : (
+          <>
+            <div className="flex flex-col justify-center items-center gap-3">
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="Avatar"
+                  className="w-32 h-32  rounded-full"
+                />
+              ) : (
+                <div className="w-32 h-32  rounded-full bg-gray-200 flex items-center justify-center">
+                  <IoPersonOutline className="w-1/2 h-1/2" />
+                </div>
+              )}
+              <p className="text-xl">{user?.nickname}</p>
+            </div>
+
+            <div className="flex gap-2 mt-5 items-center justify-center">
               <Button onClick={handleUpdateProfile} size="sm">
                 프로필 변경
               </Button>
@@ -191,9 +195,9 @@ const MyPage = () => {
                 로그아웃
               </Button>
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
